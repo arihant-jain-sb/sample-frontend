@@ -2,9 +2,6 @@
 const serverUrl = 'http://localhost:3000';
 
 // Grab all the elements we will be dealing with
-const nameField = document.querySelector('#name-field');
-const submitButton = document.querySelector('#submit-button');
-const messageArea = document.querySelector('#message-area');
 
 // Todo app elements
 const newTodoTitle = document.querySelector('#new-todo-title');
@@ -32,7 +29,7 @@ function renderTodos(todos) {
     li.dataset.id = todo.id;
     li.innerHTML = `
       <input type="checkbox" class="toggle-completed" ${todo.completed ? 'checked' : ''} />
-      <span class="todo-title" style="text-decoration:${todo.completed ? 'line-through' : 'none'}">${escapeHtml(todo.title)}</span>
+      <span class="todo-title" style="color:${todo.completed ? 'green' : 'grey'}">${escapeHtml(todo.title)}</span>
       <button class="delete-todo">Delete</button>
     `;
     todoList.appendChild(li);

@@ -21,6 +21,7 @@ This is a simple frontend for a Todo application. It connects to a backend API a
 - Each todo appears in the list with a checkbox (to mark completed) and a Delete button.
 - Checking/unchecking the box updates the todo's completed status.
 - Clicking Delete removes the todo.
+- **Completed todos appear in green text, incomplete todos in grey.**
 
 ## API Integration
 The frontend communicates with the backend using the following endpoints:
