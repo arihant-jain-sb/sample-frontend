@@ -29,7 +29,9 @@ function renderTodos(todos) {
     li.dataset.id = todo.id;
     li.innerHTML = `
       <input type="checkbox" class="toggle-completed" ${todo.completed ? 'checked' : ''} />
-      <span class="todo-title" style="color:${todo.completed ? 'green' : 'grey'}">${escapeHtml(todo.title)}</span>
+      <span class="todo-title ${todo.completed ? 'completed' : 'incomplete'}">
+        <span class="todo-icon">${todo.completed ? '✔️' : '⬜'}</span>${escapeHtml(todo.title)}
+      </span>
       <button class="delete-todo">Delete</button>
     `;
     todoList.appendChild(li);
