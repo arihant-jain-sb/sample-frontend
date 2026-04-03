@@ -6,6 +6,77 @@ const nameField = document.querySelector('#name-field');
 const submitButton = document.querySelector('#submit-button');
 const messageArea = document.querySelector('#message-area');
 
+// Todo app elements
+const newTodoTitle = document.querySelector('#new-todo-title');
+const addTodoButton = document.querySelector('#add-todo-button');
+const todoList = document.querySelector('#todo-list');
+
+// --- Todo API Calls and UI Logic ---
+
+// Fetch and render todos on page load
+window.addEventListener('DOMContentLoaded', fetchAndRenderTodos);
+addTodoButton.addEventListener('click', handleAddTodo);
+
+todoList.addEventListener('click', handleTodoListClick);
+
+async function fetchAndRenderTodos() {
+  const res = await fetch(serverUrl + '/todos');
+  const todos = await res.json();
+  renderTodos(todos);
+}
+
+function renderTodos(todos) {
+  todoList.innerHTML = '';
+  todos.forEach(todo => {
+    const li = document.createElement('li');
+    li.dataset.id = todo.id;
+    li.innerHTML = `
+      <input type="checkbox" class="toggle-completed" ${todo.completed ? 'checked' : ''} />
+      <span class="todo-title" style="text-decoration:${todo.completed ? 'line-through' : 'none'}">${escapeHtml(todo.title)}</span>
+      <button class="delete-todo">Delete</button>
+    `;
+    todoList.appendChild(li);
+  });
+}
+
+async function handleAddTodo() {
+  const title = newTodoTitle.value.trim();
+  if (!title) return;
+  const res = await fetch(serverUrl + '/todos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title })
+  });
+  if (res.ok) {
+    newTodoTitle.value = '';
+    fetchAndRenderTodos();
+  }
+}
+
+async function handleTodoListClick(e) {
+  const li = e.target.closest('li');
+  if (!li) return;
+  const id = li.dataset.id;
+  if (e.target.classList.contains('delete-todo')) {
+    await fetch(serverUrl + '/todos/' + id, { method: 'DELETE' });
+    fetchAndRenderTodos();
+  } else if (e.target.classList.contains('toggle-completed')) {
+    const completed = e.target.checked;
+    await fetch(serverUrl + '/todos/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completed })
+    });
+    fetchAndRenderTodos();
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.innerText = text;
+  return div.innerHTML;
+}
+
 
 // When the submit button is clicked, trigger the `sendRequest`
 // function which is defined below
